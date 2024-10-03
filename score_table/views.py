@@ -1,7 +1,10 @@
+import random
+import string
 from django.shortcuts import render,redirect
 from .forms import PostForm
 from django.http import JsonResponse
-from .models import Post,Participant,FujitaRanking
+from .models import Post,Participant,FujitaRanking,Reservation
+from django.contrib.admin.views.decorators import staff_member_required
 
 # Create your views here.
 
@@ -45,3 +48,69 @@ def get_ranking_data(request):
 def post_detail(request,slug):
     post = Post.objects.get(slug=slug)
     return render(request,"page/post_detail.html",{"post": post})
+
+# 予約番号をランダムに生成する関数
+def generate_reservation_number():
+    return ''.join(random.choices(string.digits, k=3))
+
+def reservation_confirmation(request):
+    reservation_number = request.session.get('reservation_number', None)
+    
+    if reservation_number:
+        # セッションから予約番号で予約を取得
+        try:
+            reservation = Reservation.objects.get(reservation_number=reservation_number)
+        except Reservation.DoesNotExist:
+            reservation = None
+        
+        if reservation and not reservation.is_checked_in:
+            # 予約が受付済みではない場合、現在の予約状況を表示
+            ahead_of_you = Reservation.objects.filter(
+                created_at__lt=reservation.created_at,
+                is_checked_in=False
+            ).count()
+            
+            return render(request, 'page/reservation_confirmation.html', {
+                'reservation': reservation,
+                'ahead_of_you': ahead_of_you
+            })
+        else:
+            # 予約が「受付済み」なら再予約を許可するため、セッションをクリア
+            request.session.pop('reservation_number', None)
+    
+    # 新規予約の場合の処理
+    if request.method == 'POST':
+        nickname = request.POST.get('nickname')
+        reservation_number = generate_reservation_number()
+        reservation = Reservation.objects.create(nickname=nickname, reservation_number=reservation_number)
+        
+        # 新しい予約番号をセッションに保存
+        request.session['reservation_number'] = reservation_number
+        return redirect('reservation_confirmation')
+
+    return render(request, 'page/reservation_form.html')
+
+
+
+@staff_member_required
+def reservation_management(request):
+    if request.method == 'POST':
+        reservation_number = request.POST.get('reservation_number')
+        try:
+            reservation = Reservation.objects.get(reservation_number=reservation_number)
+            reservation.is_checked_in = True
+            reservation.save()
+        except Reservation.DoesNotExist:
+            pass
+
+        # 処理が終わったらリダイレクト（PRGパターン）
+        return redirect('reservation_management')
+
+    # GETリクエスト時に表示するデータ
+    reserved_reservations = Reservation.objects.filter(is_checked_in=False).order_by('created_at')
+    checked_in_reservations = Reservation.objects.filter(is_checked_in=True).order_by('created_at')
+    
+    return render(request, 'page/reservation_management.html', {
+        'reserved_reservations': reserved_reservations,
+        'checked_in_reservations': checked_in_reservations
+    })
