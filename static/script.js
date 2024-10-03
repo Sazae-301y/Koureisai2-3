@@ -1,16 +1,36 @@
-const form = document.getElementById('rankingForm');
-const rankingTable = document.getElementById('rankingTable');
+const form = document.querySelector('#rankingForm');
+const rankingTable = document.querySelector('#rankingTable');
 
-let editMode = false;
-const editBtn = document.querySelector('.edit');
-const confirmDiv = document.querySelector('.confirm');
-let rankingData = JSON.parse(localStorage.getItem('ranking')) || [];
+async function fetchRankingData() {
+    try {
+        let response = await fetch('/api/rankings');
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        let data = await response.json();
+        console.log(data);
+        return data;
+    } catch (error) {
+        console.error('fetch error:', error);
+    }
+}
+fetchRankingData();
 
-// ranking data
+// ISO 8601 から YYYY/MM/DD HH:MM の形式に変換する関数
+function format_date(isoDate) {
+    const dateObj = new Date(isoDate);
+    const year = dateObj.getFullYear();
+    const month = String(dateObj.getMonth() + 1).padStart(2, '0');
+    const day = String(dateObj.getDate()).padStart(2, '0');
+    const hours = String(dateObj.getHours()).padStart(2, '0');
+    const minutes = String(dateObj.getMinutes()).padStart(2, '0');
+    const formattedDate = `${year}/${month}/${day} ${hours}:${minutes}`;
+    return formattedDate;
+}
+
 function displayRanking() {
-    rankingTable.innerHTML = ''; // reset table
+    rankingTable.innerHTML = ''; 
 
-    // Sort data by score
     rankingData.sort((a, b) => b.score - a.score);
 
     rankingData.forEach((entry, i) => {
@@ -19,89 +39,9 @@ function displayRanking() {
         <td>${i + 1}</td>
         <td>${entry.name}</td>
         <td>${entry.score}</td>
-        <td>${entry.date}</td>
-        <td class="delete_td hidden">
-            <button onclick="confirmDelete(${i})">削除</button>
-        </td>`;
+        <td>${format_date(entry.date)}</td>`;
         rankingTable.appendChild(row);
     });
 }
 
-//press the edit button
-editBtn.addEventListener('click', () => {
-    let items = document.querySelectorAll('.delete_td');
-    if (editMode) {
-        items.forEach(item => {
-            item.classList.remove('hidden');
-        });
-        editMode = !editMode;
-    } else {
-        items.forEach(item => {
-            item.classList.add('hidden');
-        });
-        editMode = !editMode
-    }
-});
-// realy dlete??function
-async function confirmDelete(index) {
-    confirmDiv.classList.remove('hidden');
-    result = await waitForYesOrNo();
-    if (result === 'yes') {
-        deleteEntry(index);
-    };  
-    confirmDiv.classList.add('hidden');
-}
-function waitForYesOrNo() {
-    return new Promise(resolve => {
-        yes.addEventListener('click', () => resolve('yes'), { once: true });
-        no.addEventListener('click', () => resolve('no'), { once: true });
-    });
-}
-// delate raking
-function deleteEntry(index) {
-    rankingData.splice(index, 1); // 指定したインデックスのデータを削除
-    localStorage.setItem('ranking', JSON.stringify(rankingData)); // 更新されたデータを保存
-    displayRanking(); // 更新後のランキングを表示
-    editBtn.click();
-}
-
-// フォームの送信イベントリスナー
-form.addEventListener('submit', function (event) {
-    event.preventDefault();
-
-    // 入力されたデータを取得
-    const name = document.getElementById('name').value;
-    const score = document.getElementById('score').value;
-    const date = new Date().toLocaleString();
-
-    // ランキングデータに追加
-    rankingData.push({ name, date, score });
-
-    // データをlocalStorageに保存
-    localStorage.setItem('ranking', JSON.stringify(rankingData));
-
-    // フォームをリセット
-    form.reset();
-
-    // ランキングを表示
-    displayRanking();
-});
-
-
-// ランキングデータを取得し、表示するための関数
-function fetchAndDisplayRanking() {
-    // APIエンドポイントからデータを取得する
-    fetch('/api/rankings/')
-        .then(response => response.json())  // レスポンスをJSONに変換
-        .then(data => {
-            // 取得したデータでランキングを更新する
-            // updateRankingDisplay(data);
-        })
-        .catch(error => {
-            console.error('ランキングデータの取得に失敗しました:', error);
-        });
-}
-
-
-// show the ranking, lol page
 displayRanking();
