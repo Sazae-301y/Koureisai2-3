@@ -17,7 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from score_table.views import frontpage,post_detail,score_table,index,get_ranking_data
+from score_table.views import frontpage,post_detail,score_table,index,get_ranking_data,reservation_confirmation,reservation_management
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -25,5 +25,7 @@ urlpatterns = [
     path("score_table/",score_table,name="score_table"),
     path('index/', index, name='index'),
     path('api/rankings/', get_ranking_data, name='get_ranking_data'),
+    path('reservation/', reservation_confirmation, name='reservation_confirmation'),
+    path('reservation/management/', reservation_management, name='reservation_management'),
     path("<slug:slug>/",post_detail,name="post_detail"),
 ]
