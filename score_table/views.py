@@ -1,6 +1,7 @@
 from django.shortcuts import render,redirect
 from .forms import PostForm
-from .models import Post,Participant
+from django.http import JsonResponse
+from .models import Post,Participant,FujitaRanking
 
 # Create your views here.
 
@@ -36,6 +37,10 @@ def score_table(request):
 
 def index(request):
     return render(request, 'page/Fujita_template.html')
+
+def get_ranking_data(request):
+    rankings = FujitaRanking.objects.all().values('name', 'score','date')  # 'name'と'score'はモデルのフィールド名に置き換えてください
+    return JsonResponse(list(rankings), safe=False)
 
 def post_detail(request,slug):
     post = Post.objects.get(slug=slug)

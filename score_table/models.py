@@ -23,6 +23,15 @@ class Post(models.Model):
 class Participant(models.Model):
     nickname = models.CharField(max_length=100)
     score = models.IntegerField()
+    posted_date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.nickname
+    
+class FujitaRanking(models.Model):
+    name = models.CharField(max_length=100)  # ユーザーの名前などを保存
+    score = models.IntegerField()  # スコアを保存
+    date = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.name} - {self.score}"

@@ -87,5 +87,21 @@ form.addEventListener('submit', function (event) {
     displayRanking();
 });
 
+
+// ランキングデータを取得し、表示するための関数
+function fetchAndDisplayRanking() {
+    // APIエンドポイントからデータを取得する
+    fetch('/api/rankings/')
+        .then(response => response.json())  // レスポンスをJSONに変換
+        .then(data => {
+            // 取得したデータでランキングを更新する
+            // updateRankingDisplay(data);
+        })
+        .catch(error => {
+            console.error('ランキングデータの取得に失敗しました:', error);
+        });
+}
+
+
 // show the ranking, lol page
 displayRanking();
