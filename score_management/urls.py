@@ -17,12 +17,13 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from score_table.views import frontpage,post_detail,score_table,index
+from score_table.views import frontpage,post_detail,score_table,index,save_ranking
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path("",frontpage, name="frontpage"),
     path("score_table/",score_table,name="score_table"),
     path('index/', index, name='index'),
+    path('save-ranking/', save_ranking, name='save_ranking'),
     path("<slug:slug>/",post_detail,name="post_detail"),
 ]

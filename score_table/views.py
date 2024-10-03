@@ -1,6 +1,10 @@
 from django.shortcuts import render,redirect
 from .forms import PostForm
-from .models import Post,Participant
+from .models import Post,Participant,FujitaRanking
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+import json
+
 
 # Create your views here.
 
@@ -40,3 +44,19 @@ def index(request):
 def post_detail(request,slug):
     post = Post.objects.get(slug=slug)
     return render(request,"page/post_detail.html",{"post": post})
+
+@csrf_exempt
+def save_ranking(request):
+    if request.method == 'POST':
+        data = json.loads(request.body.decode('utf-8'))
+        participant = data.get('participant')
+        score = data.get('score')
+        
+        if participant and score is not None:
+            ranking = FujitaRanking(participant=participant, score=score)
+            ranking.save()
+            return JsonResponse({'status': 'success'}, status=201)
+        else:
+            return JsonResponse({'status': 'error', 'message': '無効なデータです'}, status=400)
+    
+    return JsonResponse({'status': 'error', 'message': '無効なリクエストメソッドです'}, status=405)

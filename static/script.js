@@ -87,5 +87,26 @@ form.addEventListener('submit', function (event) {
     displayRanking();
 });
 
+
+function saveRanking(participant, score) {
+    fetch('/save-ranking/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCookie('csrftoken')
+        },
+        body: JSON.stringify({ participant: participant, score: score })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'success') {
+            console.log('ランキングが正常に保存されました');
+        } else {
+            console.log('エラー:', data.message);
+        }
+    });
+}
+
+
 // show the ranking, lol page
 displayRanking();
