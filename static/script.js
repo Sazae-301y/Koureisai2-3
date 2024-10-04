@@ -14,7 +14,7 @@ async function fetchRankingData() {
         console.error('fetch error:', error);
     }
 }
-fetchRankingData();
+let rankingData = fetchRankingData();
 
 // ISO 8601 から YYYY/MM/DD HH:MM の形式に変換する関数
 function format_date(isoDate) {
@@ -45,3 +45,6 @@ function displayRanking() {
 }
 
 displayRanking();
+
+
+
