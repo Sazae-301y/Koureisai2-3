@@ -24,13 +24,18 @@
     <div class="container">
         <!-- 大きく「得点表」と表示 -->
         <h1 class="title is-2 has-text-centered">得点表</h1>
+        <style>
+            .title.is-2.has-text-centered{
+                color: black !important;
+            }
+        </style>
 
         <div class="columns">
             <div class="column">
-                <button class="button is-primary is-fullwidth" onclick="switchVersion('KodairaTemplate')">Current Version</button>
+                <button class="button is-primary is-fullwidth" onclick="switchVersion('KodairaTemplate')">難易度中</button>
             </div>
             <div class="column">
-                <button class="button is-link is-fullwidth" onclick="switchVersion('FujitaTemplate')">Index Version</button>
+                <button class="button is-link is-fullwidth" onclick="switchVersion('FujitaTemplate')">難易度鬼</button>
             </div>
         </div>
 
@@ -44,6 +49,11 @@
 
     <!-- コメント表示セクション -->
     <h2 class="title is-4">投稿されたコメント</h2>
+    <style>
+        .title.is-4{
+            color: black !important;
+        }
+    </style>
     <div class="box">
 
         <div style="max-height: 450px; overflow-y: auto;">
