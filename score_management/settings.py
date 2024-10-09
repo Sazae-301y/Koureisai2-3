@@ -30,6 +30,8 @@ ALLOWED_HOSTS = ["192.168.137.156","192.168.224.171","127.0.0.1","163.43.183.45"
 
 
 # Application definition
+CSRF_TRUSTED_ORIGINS = ['https://koureisai2-3.com','https://nnct.koureisai2-3.com']
+
 
 INSTALLED_APPS = [
     'django.contrib.admin',
