@@ -16,6 +16,8 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from django.conf import settings
+from django.conf.urls.static import static
 
 from score_table.views import frontpage,post_detail,score_table,index,get_ranking_data,reservation_confirmation,reservation_management
 
@@ -29,3 +31,7 @@ urlpatterns = [
     path('reservation/management/', reservation_management, name='reservation_management'),
     path("<slug:slug>/",post_detail,name="post_detail"),
 ]
+
+
+if settings.DEBUG:
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
