@@ -1,0 +1,25 @@
+{% extends "page/base.html" %}
+
+{% block content %}
+<section class="section">
+    <div class="container">
+        <div class="box">
+            <h1 class="title">新規予約</h1>
+            <form method="post">
+                {% csrf_token %}
+                <div class="field">
+                    <label class="label" for="nickname">ニックネーム</label>
+                    <div class="control">
+                        <input class="input" type="text" name="nickname" id="nickname" required placeholder="ニックネームを入力">
+                    </div>
+                    <label class="label" for="nickname">お名前をお呼びするのでわかりやすい名前でお願いします。</label>
+                </div>
+                <div class="control">
+                    <button type="submit" class="button is-primary">予約する</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+{%endblock%}

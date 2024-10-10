@@ -1,0 +1,69 @@
+{% extends "page/base.html" %}
+
+{% block content %}
+
+    <style>
+        .first-place {
+            background-color: gold !important;
+            font-weight: bold;
+            color: black;
+        }
+
+        .second-place {
+            background-color: silver !important;
+            font-weight: bold;
+            color: black;
+        }
+
+        .third-place {
+            background-color: #cd7f32 !important; /* ブロンズ */
+            font-weight: bold;
+            color: white;
+        }
+
+    </style>
+
+    <!-- 大きく「得点表」と表示 -->
+    <h1 class="title is-2 has-text-centered">得点表</h1>
+
+    <!-- 表のコンテンツ -->
+    <div class="table-container">
+        <table class="table is-striped is-hoverable is-fullwidth">
+            <thead>
+                <tr>
+                    <th>順位</th>
+                    <th>ニックネーム</th>
+                    <th>得点</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for participant in participants %}
+                <tr class="
+                {% if forloop.counter == 1 %}
+                    first-place
+                {% elif forloop.counter == 2 %}
+                    second-place
+                {% elif forloop.counter == 3 %}
+                    third-place
+                {% endif %}
+            ">
+                    <td>
+                        {% if forloop.counter == 1 %}
+                            🏆 1位
+                        {% elif forloop.counter == 2 %}
+                            🥈 2位
+                        {% elif forloop.counter == 3 %}
+                            🥉 3位
+                        {% else %}
+                            {{ forloop.counter }}位
+                        {% endif %}
+                    </td>
+                    <td>{{ participant.nickname }}</td>
+                    <td>{{ participant.score }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <hr>
+{%endblock%}

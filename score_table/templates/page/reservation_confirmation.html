@@ -1,0 +1,25 @@
+{% extends "page/base.html" %}
+
+{% block content %}
+<section class="section">
+    <div class="container">
+        <div class="box">
+            <h1 class="title">予約確認</h1>
+            <h2 class="subtitle">あなたの予約番号は:</h2>
+            <div class="notification is-primary">
+                <strong>{{ reservation.reservation_number }}</strong>
+            </div>
+            <p>あなたの前に <strong>{{ ahead_of_you }}</strong> 人の予約があります。</p>
+        </div>
+
+        <div class="box">
+            <h1 class="title">予約削除</h1>
+            <form method="post" action="{% url 'delete_reservation' reservation.reservation_number %}" style="display:inline;">
+                {% csrf_token %}
+                <button type="submit" class="button is-danger">削除</button>
+            </form>
+        </div>
+    </div>
+</section>
+
+{%endblock%}
