@@ -1,6 +1,6 @@
 import random
 import string
-from django.shortcuts import render,redirect
+from django.shortcuts import get_object_or_404,render,redirect
 from .forms import PostForm
 from django.http import JsonResponse
 from .models import Post,Participant,FujitaRanking,Reservation
@@ -90,18 +90,29 @@ def reservation_confirmation(request):
 
     return render(request, 'page/reservation_form.html')
 
+def delete_reservation(request, reservation_number):
+
+    reservation = get_object_or_404(Reservation, reservation_number=reservation_number)
+    reservation.delete()
+    return redirect('reservation_confirmation')
+
 
 
 @staff_member_required
 def reservation_management(request):
     if request.method == 'POST':
         reservation_number = request.POST.get('reservation_number')
-        try:
-            reservation = Reservation.objects.get(reservation_number=reservation_number)
-            reservation.is_checked_in = True
-            reservation.save()
-        except Reservation.DoesNotExist:
-            pass
+        action = request.POST.get('action')
+        if action == 'accept':
+            try:
+                reservation = Reservation.objects.get(reservation_number=reservation_number)
+                reservation.is_checked_in = True
+                reservation.save()
+            except Reservation.DoesNotExist:
+                pass
+        elif action == 'delete':
+            reservation = get_object_or_404(Reservation, reservation_number=reservation_number)
+            reservation.delete()
 
         # 処理が終わったらリダイレクト（PRGパターン）
         return redirect('reservation_management')

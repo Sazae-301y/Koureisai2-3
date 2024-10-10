@@ -49,7 +49,7 @@
         </div>
 
         <div class="box">
-            <h2 class="subtitle">予約番号を受付済みにする</h2>
+            <h2 class="subtitle">予約番号の管理</h2>
             <form method="post">
                 {% csrf_token %}
                 <div class="field">
@@ -59,7 +59,8 @@
                     </div>
                 </div>
                 <div class="control">
-                    <button type="submit" class="button is-success">受付する</button>
+                    <button type="submit" name="action" value="accept" class="button is-success">受付する</button>
+                    <button type="submit" name="action" value="delete" class="button is-success">削除する</button>
                 </div>
             </form>
         </div>

@@ -19,7 +19,7 @@ from django.urls import path
 from django.conf import settings
 from django.conf.urls.static import static
 
-from score_table.views import frontpage,post_detail,score_table,index,get_ranking_data,reservation_confirmation,reservation_management
+from score_table.views import frontpage,post_detail,score_table,index,get_ranking_data,reservation_confirmation,reservation_management,delete_reservation
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -29,6 +29,7 @@ urlpatterns = [
     path('api/rankings/', get_ranking_data, name='get_ranking_data'),
     path('reservation/', reservation_confirmation, name='reservation_confirmation'),
     path('reservation/management/', reservation_management, name='reservation_management'),
+    path('delete_reservation/<int:reservation_number>/', delete_reservation, name='delete_reservation'),
     path("<slug:slug>/",post_detail,name="post_detail"),
 ]
 
