@@ -4,6 +4,7 @@ from django.shortcuts import get_object_or_404,render,redirect
 from .forms import PostForm
 from django.http import JsonResponse
 from .models import Post,Participant,FujitaRanking,Reservation
+from django.utils import timezone
 from django.contrib.admin.views.decorators import staff_member_required
 
 # Create your views here.
@@ -110,9 +111,31 @@ def reservation_management(request):
                 reservation.save()
             except Reservation.DoesNotExist:
                 pass
+        elif action == 'notaccept':
+            try:
+                reservation = Reservation.objects.get(reservation_number=reservation_number)
+                reservation.is_checked_in = False
+                reservation.save()
+            except Reservation.DoesNotExist:
+                pass
         elif action == 'delete':
             reservation = get_object_or_404(Reservation, reservation_number=reservation_number)
             reservation.delete()
+        elif action == 'notthere':
+            try:
+                reservation = Reservation.objects.get(reservation_number=reservation_number)
+                reservation.is_not_there = True
+                reservation.save()
+            except Reservation.DoesNotExist:
+                pass
+        elif action == 'there':
+            try:
+                reservation = Reservation.objects.get(reservation_number=reservation_number)
+                reservation.is_not_there = False
+                reservation.save()
+            except Reservation.DoesNotExist:
+                pass
+            
 
         # 処理が終わったらリダイレクト（PRGパターン）
         return redirect('reservation_management')
@@ -120,8 +143,10 @@ def reservation_management(request):
     # GETリクエスト時に表示するデータ
     reserved_reservations = Reservation.objects.filter(is_checked_in=False).order_by('created_at')
     checked_in_reservations = Reservation.objects.filter(is_checked_in=True).order_by('created_at')
+    now = timezone.now()
     
     return render(request, 'page/reservation_management.html', {
         'reserved_reservations': reserved_reservations,
-        'checked_in_reservations': checked_in_reservations
+        'checked_in_reservations': checked_in_reservations,
+        'now': now
     })
