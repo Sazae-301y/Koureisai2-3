@@ -97,6 +97,9 @@ def delete_reservation(request, reservation_number):
     reservation.delete()
     return redirect('reservation_confirmation')
 
+def explanation(request):
+    return render(request, 'page/explanation.html')
+
 
 
 @staff_member_required
