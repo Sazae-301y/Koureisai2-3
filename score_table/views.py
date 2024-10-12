@@ -105,40 +105,48 @@ def explanation(request):
 @staff_member_required
 def reservation_management(request):
     if request.method == 'POST':
-        reservation_number = request.POST.get('reservation_number')
-        action = request.POST.get('action')
-        if action == 'accept':
-            try:
-                reservation = Reservation.objects.get(reservation_number=reservation_number)
-                reservation.is_checked_in = True
+        if 'action' in request.POST:
+
+            reservation_number = request.POST.get('reservation_number')
+            action = request.POST.get('action')
+            if action == 'accept':
+                try:
+                    reservation = Reservation.objects.get(reservation_number=reservation_number)
+                    reservation.is_checked_in = True
+                    reservation.save()
+                except Reservation.DoesNotExist:
+                    pass
+            elif action == 'notaccept':
+                try:
+                    reservation = Reservation.objects.get(reservation_number=reservation_number)
+                    reservation.is_checked_in = False
+                    reservation.save()
+                except Reservation.DoesNotExist:
+                    pass
+            elif action == 'delete':
+                reservation = get_object_or_404(Reservation, reservation_number=reservation_number)
+                reservation.delete()
+            elif action == 'notthere':
+                try:
+                    reservation = Reservation.objects.get(reservation_number=reservation_number)
+                    reservation.is_not_there = True
+                    reservation.save()
+                except Reservation.DoesNotExist:
+                    pass
+            elif action == 'there':
+                try:
+                    reservation = Reservation.objects.get(reservation_number=reservation_number)
+                    reservation.is_not_there = False
+                    reservation.save()
+                except Reservation.DoesNotExist:
+                    pass
+        elif 'manual_reservation' in request.POST:
+            nickname = request.POST.get('nickname')
+            action = request.POST.get('manual_reservation')
+            if action == 'reservate':
+                reservation_number = generate_reservation_number()
+                reservation = Reservation(nickname=nickname, reservation_number=reservation_number)
                 reservation.save()
-            except Reservation.DoesNotExist:
-                pass
-        elif action == 'notaccept':
-            try:
-                reservation = Reservation.objects.get(reservation_number=reservation_number)
-                reservation.is_checked_in = False
-                reservation.save()
-            except Reservation.DoesNotExist:
-                pass
-        elif action == 'delete':
-            reservation = get_object_or_404(Reservation, reservation_number=reservation_number)
-            reservation.delete()
-        elif action == 'notthere':
-            try:
-                reservation = Reservation.objects.get(reservation_number=reservation_number)
-                reservation.is_not_there = True
-                reservation.save()
-            except Reservation.DoesNotExist:
-                pass
-        elif action == 'there':
-            try:
-                reservation = Reservation.objects.get(reservation_number=reservation_number)
-                reservation.is_not_there = False
-                reservation.save()
-            except Reservation.DoesNotExist:
-                pass
-            
 
         # 処理が終わったらリダイレクト（PRGパターン）
         return redirect('reservation_management')
