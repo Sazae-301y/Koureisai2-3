@@ -12,6 +12,20 @@
         document.execCommand("copy");
         document.body.removeChild(textarea);
     }
+    function changeButton(button) {
+        // ボタンのテキストを変更
+        button.textContent = "Copied!";
+        // ボタンのスタイルを変更 (クラスを変更することで対応)
+        button.classList.remove('is-primary');
+        button.classList.add('is-success');
+        // 3秒後に元の状態に戻す
+        setTimeout(function() {
+            button.textContent = "コピー";
+            button.classList.remove('is-success');
+            button.classList.add('is-primary');
+            button.disabled = false;
+        }, 1000);
+    }
 </script>
 
 <section class="section">
@@ -26,43 +40,71 @@
                         <th>順番</th>
                         <th>ニックネーム</th>
                         <th>予約番号</th>
-                        <th>コピー</th>
                         <th>予約日時</th>
+                        <th>遅延</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for reservation in reserved_reservations %}
-                    <tr>
+                    <tr class="{% if reservation.is_not_there %}has-background-danger-light{% endif %}">
                         <td>{{ forloop.counter }}</td> <!-- 順番を表示 -->
                         <td>{{ reservation.nickname }}</td>
-                        <td>{{ reservation.reservation_number }}</td>
                         <td>
-                            <button class="button is-small is-link" onclick="copyToClipboard('{{ reservation.reservation_number }}')">
+                            {{ reservation.reservation_number }}
+                            <button class="button is-small is-link" onclick="copyToClipboard('{{ reservation.reservation_number }}');changeButton(this)">
                                 コピー
                             </button>
                         </td>
-                        <td>{{ reservation.created_at }}</td>
+                        <td>
+                            {{ reservation.created_at|timesince:now }}前
+                            
+                        </td>
+                        <td>{% if reservation.is_not_there %}<strong>遅延！！</strong>{% endif %}</td>
                     </tr>
                     {% endfor %}
                 </tbody>
             </table>
         </div>
+        <div class="columns">
+            <div class="column">
 
-        <div class="box">
-            <h2 class="subtitle">予約番号の管理</h2>
-            <form method="post">
-                {% csrf_token %}
-                <div class="field">
-                    <label class="label" for="reservation_number">予約番号</label>
-                    <div class="control">
-                        <input class="input" type="text" name="reservation_number" id="reservation_number" required placeholder="予約番号を入力">
-                    </div>
+                <div class="box">
+                    <h2 class="subtitle">予約番号の管理</h2>
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="field">
+                            <label class="label" for="reservation_number">予約番号</label>
+                            <div class="control">
+                                <input class="input" type="text" name="reservation_number" id="reservation_number" required placeholder="予約番号を入力">
+                            </div>
+                        </div>
+                        <div class="control">
+                            <button type="submit" name="action" value="accept" class="button is-success">受付する</button>
+                            <button type="submit" name="action" value="notaccept" class="button is-warning">受付取り消し</button>
+                            <button type="submit" name="action" value="notthere" class="button is-success">遅延</button>
+                            <button type="submit" name="action" value="there" class="button is-warning">遅延取り消し</button>
+                            <button type="submit" name="action" value="delete" class="button is-danger" onclick="return confirm('本当にこの予約を削除しますか？');">削除する</button>
+                        </div>
+                    </form>
                 </div>
-                <div class="control">
-                    <button type="submit" name="action" value="accept" class="button is-success">受付する</button>
-                    <button type="submit" name="action" value="delete" class="button is-success">削除する</button>
+            </div>
+            <div class="column">
+                <div class="box">
+                    <h2 class="subtitle">手動予約</h2>
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="field">
+                            <label class="label" for="reservation_number">ニックネーム</label>
+                            <div class="control">
+                                <input class="input" type="text" name="nickname" id="nickname" required placeholder="ニックネームを入力">
+                            </div>
+                        </div>
+                        <div class="control">
+                            <button type="submit" name="manual_reservation" value="reservate" class="button is-success">手動予約する</button>
+                        </div>
+                    </form>
                 </div>
-            </form>
+            </div>
         </div>
 
         <div class="box">
@@ -79,7 +121,12 @@
                     {% for reservation in checked_in_reservations %}
                     <tr>
                         <td>{{ reservation.nickname }}</td>
-                        <td>{{ reservation.reservation_number }}</td>
+                        <td>
+                            {{ reservation.reservation_number }}
+                            <button class="button is-small is-link" onclick="copyToClipboard('{{ reservation.reservation_number }}');changeButton(this)">
+                                コピー
+                            </button>
+                        </td>
                         <td>{{ reservation.created_at }}</td>
                     </tr>
                     {% endfor %}

@@ -10,13 +10,16 @@
                 <strong>{{ reservation.reservation_number }}</strong>
             </div>
             <p>あなたの前に <strong>{{ ahead_of_you }}</strong> 人の予約があります。</p>
+            {% if ahead_of_you < 4%}
+            <h1 class="subtitle"><strong>もうすぐでお呼び出しです。受付までお越しください</strong></h1>
+            {% endif %}
         </div>
 
         <div class="box">
             <h1 class="title">予約削除</h1>
             <form method="post" action="{% url 'delete_reservation' reservation.reservation_number %}" style="display:inline;">
                 {% csrf_token %}
-                <button type="submit" class="button is-danger">削除</button>
+                <button type="submit" class="button is-danger" onclick="return confirm('本当にこの予約を削除しますか？');">削除</button>
             </form>
         </div>
     </div>

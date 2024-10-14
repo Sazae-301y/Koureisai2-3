@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>工嶺祭2-3</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.2/css/bulma.min.css">
+    <link rel="icon" href="{% static 'favicon.ico' %}">
     <style>
         /* スティッキーフッターのための基本設定 */
         html {
@@ -37,12 +38,18 @@
         <div class="navbar-end">
             <div class="navbar-item">
                 <div class="buttons">
+                    <a class="button is-primary" href="{% url 'explanation' %}">
+                        <strong>
+                            ルール説明
+                        </strong>
+                    </a>
                     <a class="button is-primary" href="{% url 'reservation_confirmation' %}">
                         <strong>
                             予約状況
                         </strong>
                     </a>
                 </div>
+                
             </div>
         </div>
 

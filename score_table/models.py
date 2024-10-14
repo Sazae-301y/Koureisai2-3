@@ -40,6 +40,7 @@ class Reservation(models.Model):
     nickname = models.CharField(max_length=50)  # ニックネームを保存
     reservation_number = models.CharField(max_length=10, unique=True)  # 予約番号（ユニーク）
     is_checked_in = models.BooleanField(default=False)  # 受付済みかどうか
+    is_not_there = models.BooleanField(default=False) #受付にいないんだが
     created_at = models.DateTimeField(auto_now_add=True)  # 予約日時
 
     def __str__(self):
