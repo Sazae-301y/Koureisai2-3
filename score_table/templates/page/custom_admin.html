@@ -1,0 +1,165 @@
+{% extends "page/base.html" %}
+
+{% block content %}
+<div class="container">
+    <h1 class="title">点数管理</h1>
+
+    <!-- Models Section: Player and Game side by side -->
+    <div class="columns">
+        <!-- Player Management -->
+        <div class="column">
+            <!-- Add New Player Form -->
+            <div class="box">
+                <h2 class="subtitle"><strong>難しいモード</strong></h2>
+
+                <div class="box">
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="field">
+                            <label class="label">ニックネーム</label>
+                            <div class="control">
+                                <input class="input is-small" type="text" name="nickname" placeholder="ニックネームを入力してください" required>
+                            </div>
+                        </div>
+                        
+                        <div class="field">
+                            <label class="label">点数</label>
+                            <div class="control">
+                                <input class="input is-small" type="number" name="score" placeholder="点数を入力してください" required>
+                            </div>
+                        </div>
+                        
+                        <div class="field">
+                            <div class="control">
+                                <button class="button is-primary is-small" type="submit" name="add_player">追加する</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                
+                <!-- Player List -->
+                <div class="box">
+                    <table class="table is-fullwidth is-striped is-hoverable">
+                        <thead>
+                            <tr>
+                                <th>ニックネーム</th>
+                                <th>点数</th>
+                                <th>編集</th>
+                                <th>削除</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for player in players %}
+                            <tr>
+                                <td>{{ player.nickname }}</td>
+                                <td>
+                                        <form method="post" class="is-inline">
+                                            {% csrf_token %}
+                                        <!-- Editable Score -->
+                                        <div class="control">
+                                            <input class="input is-small" type="number" name="score" value="{{ player.score }}" required>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <!-- Edit Button -->
+                                        <div class="control">
+                                            <button class="button is-small is-info" type="submit" name="edit_player">編集</button>
+                                        </div>
+                                    </form>
+                                </td>
+                                <td>
+                                    <!-- Delete Button -->
+                                    <form method="post" class="is-inline">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="player_id" value="{{ player.id }}">
+                                        <button class="button is-small is-danger" type="submit" name="delete_player">削除</button>
+                                    </form>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Game Management -->
+        <div class="column">
+            <!-- Add New Game Form -->
+            <div class="box">
+                <h2 class="subtitle"><strong>簡単モード</strong></h2>
+
+                <div class="box">
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="field">
+                            <label class="label">ニックネーム</label>
+                            <div class="control">
+                                <input class="input is-small" type="text" name="name" placeholder="ニックネームを入力してください" required>
+                            </div>
+                        </div>
+                        
+                        <div class="field">
+                            <label class="label">点数</label>
+                            <div class="control">
+                                <input class="input is-small" type="number" name="score" placeholder="点数を入力してください" required>
+                            </div>
+                        </div>
+                        
+                        <div class="field">
+                            <div class="control">
+                                <button class="button is-primary is-small" type="submit" name="add_game">追加する</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                
+                <!-- Game List -->
+                <div class="box">
+                    <table class="table is-fullwidth is-striped is-hoverable">
+                        <thead>
+                            <tr>
+                                <th>ニックネーム</th>
+                                <th>点数</th>
+                                <th>編集</th>
+                                <th>削除</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for game in games %}
+                            <tr>
+                                <td>{{ game.name }}</td>
+                                <td>
+                                        <form method="post" class="is-inline">
+                                            {% csrf_token %}
+                                        <!-- Editable Score -->
+                                        <div class="control">
+                                            <input class="input is-small" type="number" name="score" value="{{ game.score }}" required>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <!-- Edit Button -->
+                                        <div class="control">
+                                            <button class="button is-small is-info" type="submit" name="edit_game">編集</button>
+                                        </div>
+                                    </form>
+                                </td>
+                                <td>
+                                    <!-- Delete Button -->
+                                    <form method="post" class="is-inline">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="game_id" value="{{ game.id }}">
+                                        <button class="button is-small is-danger" type="submit" name="delete_game">削除</button>
+                                    </form>
+                                    
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{%endblock%}

@@ -101,6 +101,49 @@ def explanation(request):
     return render(request, 'page/explanation.html')
 
 
+@staff_member_required
+def custom_admin_view(request):
+    players = Participant.objects.all()
+    games = FujitaRanking.objects.all()
+
+    if request.method == "POST":
+        # Playerの操作
+        if 'add_player' in request.POST:
+            nickname = request.POST.get('nickname')
+            score = request.POST.get('score')
+            Participant.objects.create(nickname=nickname, score=score, posted_date=timezone.now())
+        elif 'edit_player' in request.POST:
+            player_id = request.POST.get('player_id')
+            player = get_object_or_404(Participant, id=player_id)
+            player.nickname = request.POST.get('nickname')
+            player.score = request.POST.get('score')
+            player.save()
+        elif 'delete_player' in request.POST:
+            player_id = request.POST.get('player_id')
+            player = get_object_or_404(Participant, id=player_id)
+            player.delete()
+
+        # Gameの操作
+        if 'add_game' in request.POST:
+            name = request.POST.get('name')
+            score = request.POST.get('score')
+            FujitaRanking.objects.create(name=name, score=score, date=timezone.now())
+        elif 'edit_game' in request.POST:
+            game_id = request.POST.get('game_id')
+            game = get_object_or_404(FujitaRanking, id=game_id)
+            game.name = request.POST.get('name')
+            game.score = request.POST.get('score')
+            game.save()
+        elif 'delete_game' in request.POST:
+            game_id = request.POST.get('game_id')
+            game = get_object_or_404(FujitaRanking, id=game_id)
+            game.delete()
+
+        return redirect('custom_admin')
+
+    return render(request, 'page/custom_admin.html', {'players': players, 'games': games})
+
+
 
 @staff_member_required
 def reservation_management(request):
