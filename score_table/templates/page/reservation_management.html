@@ -34,37 +34,39 @@
 
         <div class="box">
             <h2 class="subtitle">予約済み一覧</h2>
-            <table class="table is-striped is-hoverable is-fullwidth">
-                <thead>
-                    <tr>
-                        <th>順番</th>
-                        <th>ニックネーム</th>
-                        <th>予約番号</th>
-                        <th>予約日時</th>
-                        <th>遅延</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for reservation in reserved_reservations %}
-                    <tr class="{% if reservation.is_not_there %}has-background-danger-light{% endif %}">
-                        <td>{{ forloop.counter }}</td> <!-- 順番を表示 -->
-                        <td>{{ reservation.nickname }}</td>
-                        <td>
-                            {{ reservation.reservation_number }}
-                            <button class="button is-small is-link" onclick="copyToClipboard('{{ reservation.reservation_number }}');changeButton(this)">
-                                コピー
-                            </button>
-                        </td>
-                        <td>
-                            {{ reservation.created_at|timesince:now }}前
-                            
-                        </td>
-                        <td>{% if reservation.is_not_there %}<strong>遅延！！</strong>{% endif %}</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+            <div class="table-container" style="max-height: 600px; overflow-y: auto;">
+                <table class="table is-striped is-hoverable is-fullwidth">
+                    <thead style="position: sticky; top: 0; background-color: white; z-index: 1;">
+                        <tr>
+                            <th>順番</th>
+                            <th>ニックネーム</th>
+                            <th>予約番号</th>
+                            <th>予約日時</th>
+                            <th>遅延</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for reservation in reserved_reservations %}
+                        <tr class="{% if reservation.is_not_there %}has-background-danger-light{% endif %}">
+                            <td>{{ forloop.counter }}</td> <!-- 順番を表示 -->
+                            <td>{{ reservation.nickname }}</td>
+                            <td>
+                                {{ reservation.reservation_number }}
+                                <button class="button is-small is-link" onclick="copyToClipboard('{{ reservation.reservation_number }}');changeButton(this)">
+                                    コピー
+                                </button>
+                            </td>
+                            <td>
+                                {{ reservation.created_at|timesince:now }}前
+                            </td>
+                            <td>{% if reservation.is_not_there %}<strong>遅延！！</strong>{% endif %}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         </div>
+        
         <div class="columns">
             <div class="column">
 

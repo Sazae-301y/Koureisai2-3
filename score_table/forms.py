@@ -6,5 +6,5 @@ class PostForm(forms.ModelForm):
         model = Post
         fields = ['comment']  # slugフィールドは削除
         widgets = {
-            'comment': forms.Textarea(attrs={'class': 'textarea', 'placeholder': 'コメントを入力してください'}),
+            'comment': forms.Textarea(attrs={'class': 'textarea', 'placeholder': 'コメントを入力してください\n不適切な投稿は予告なく削除する場合があります。'}),
         }
