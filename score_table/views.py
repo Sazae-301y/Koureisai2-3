@@ -52,7 +52,13 @@ def post_detail(request,slug):
 
 # 予約番号をランダムに生成する関数
 def generate_reservation_number():
-    return ''.join(random.choices(string.digits, k=3))
+    while True:
+        # ランダムな6桁の英数字の予約番号を生成
+        reservation_number = ''.join(random.choices(string.digits, k=4))
+        
+        # この予約番号が既にデータベースに存在するか確認
+        if not Reservation.objects.filter(reservation_number=reservation_number).exists():
+            return reservation_number
 
 def reservation_confirmation(request):
     reservation_number = request.session.get('reservation_number', None)
@@ -185,9 +191,9 @@ def reservation_management(request):
                     pass
         elif 'manual_reservation' in request.POST:
             nickname = request.POST.get('nickname')
+            reservation_number = request.POST.get('reservation_number')
             action = request.POST.get('manual_reservation')
             if action == 'reservate':
-                reservation_number = generate_reservation_number()
                 reservation = Reservation(nickname=nickname, reservation_number=reservation_number)
                 reservation.save()
 
@@ -198,9 +204,11 @@ def reservation_management(request):
     reserved_reservations = Reservation.objects.filter(is_checked_in=False).order_by('created_at')
     checked_in_reservations = Reservation.objects.filter(is_checked_in=True).order_by('created_at')
     now = timezone.now()
+    ramdom_number = generate_reservation_number()
     
     return render(request, 'page/reservation_management.html', {
         'reserved_reservations': reserved_reservations,
         'checked_in_reservations': checked_in_reservations,
-        'now': now
+        'now': now,
+        'random_number':ramdom_number
     })

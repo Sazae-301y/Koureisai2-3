@@ -100,6 +100,10 @@
                             <div class="control">
                                 <input class="input" type="text" name="nickname" id="nickname" required placeholder="ニックネームを入力">
                             </div>
+                            <label class="label" for="reservation_number">予約番号</label>
+                            <div class="control">
+                                <input class="input" type="text" name="reservation_number" id="reservation_number" value="{{ random_number }}" readonly>
+                            </div>
                         </div>
                         <div class="control">
                             <button type="submit" name="manual_reservation" value="reservate" class="button is-success">手動予約する</button>
