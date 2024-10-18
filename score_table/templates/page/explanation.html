@@ -1,6 +1,7 @@
 {% extends "page/base.html" %}
 
 {% block content %}
+{% load static %}
 <style>
     .video-container {
         position: relative;
@@ -24,9 +25,12 @@
         <div class="columns">
             <div class="column">
                 <div class="box">
-                    <h1 class="title">全体の流れ</h1>
+                    <h1 class="title">滑り台</h1>
                     <div class="video-container">
-                        <iframe width="2026" height="949" src="https://www.youtube.com/embed/Tu6pWncYy4U" title="世界一わかりやすいCSS講座！ #初心者向け #HTML #プログラミング入門" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                        <video width="600" controls poster="{% static 'videos/滑り台.jpg' %}">
+                            <source src="{% static 'videos/滑り台解説動画.mp4' %}" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
                     </div>
                 </div>
             </div>
@@ -34,25 +38,10 @@
                 <div class="box">
                     <h1 class="title">コの字</h1>
                     <div class="video-container">
-                        <iframe width="2026" height="949" src="https://www.youtube.com/embed/Tu6pWncYy4U" title="世界一わかりやすいCSS講座！ #初心者向け #HTML #プログラミング入門" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="columns">
-            <div class="column">
-                <div class="box">
-                    <h1 class="title">滑り台</h1>
-                    <div class="video-container">
-                        <iframe width="2026" height="949" src="https://www.youtube.com/embed/Tu6pWncYy4U" title="世界一わかりやすいCSS講座！ #初心者向け #HTML #プログラミング入門" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-                    </div>
-                </div>
-            </div>
-            <div class="column">
-                <div class="box">
-                    <h1 class="title">あああああ</h1>
-                    <div class="video-container">
-                        <iframe width="2026" height="949" src="https://www.youtube.com/embed/Tu6pWncYy4U" title="世界一わかりやすいCSS講座！ #初心者向け #HTML #プログラミング入門" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                        <video width="600" controls poster="{% static 'videos/コの字.jpg' %}">
+                            <source src="{% static 'videos/滑り台解説動画.mp4' %}" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
                     </div>
                 </div>
             </div>

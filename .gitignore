@@ -4,4 +4,4 @@ __pycache__/
 db-volumes/
 db.sqlite3
 venv/
-static/
+/static/
