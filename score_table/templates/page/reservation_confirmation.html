@@ -9,12 +9,14 @@
             <div class="notification is-primary">
                 <strong>{{ reservation.reservation_number }}</strong>
             </div>
+            <p>あなたの前に <strong>{{ ahead_of_you }}</strong> 人の予約があります。</p>
+            <p>約<strong>{{ waiting_time }}</strong> 分後にまたお越しください。</p>
+            <p>予約は前後する場合がございます。</p>
             {% if ahead_of_you < 4%}
             {% if reservation.is_not_there == True %}
             <h1 class="subtitle"><strong>予約時間が過ぎています。お早めににお越しください</strong></h1>
             {% endif %}
             {% if reservation.is_not_there == False %}
-            <p>あなたの前に <strong>{{ ahead_of_you }}</strong> 人の予約があります。</p>
             <h1 class="subtitle"><strong>もうすぐでお呼び出しです。受付までお越しください</strong></h1>
             {% endif %}
             {% endif %}

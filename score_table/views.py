@@ -76,10 +76,12 @@ def reservation_confirmation(request):
                 created_at__lt=reservation.created_at,
                 is_checked_in=False
             ).count()
+            waiting_time = ahead_of_you * 2
             
             return render(request, 'page/reservation_confirmation.html', {
                 'reservation': reservation,
-                'ahead_of_you': ahead_of_you
+                'ahead_of_you': ahead_of_you,
+                'waiting_time': waiting_time
             })
         else:
             # 予約が「受付済み」なら再予約を許可するため、セッションをクリア

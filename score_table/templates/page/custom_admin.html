@@ -39,36 +39,35 @@
                 
                 <!-- Player List -->
                 <div class="box">
-                    <table class="table is-fullwidth is-striped is-hoverable">
-                        <thead>
-                            <tr>
-                                <th>ニックネーム</th>
-                                <th>点数</th>
-                                <th>編集</th>
-                                <th>削除</th>
-                            </tr>
+                    <div class="table-container" style="max-height: 600px; overflow-y: auto;">
+
+                        <table class="table is-fullwidth is-striped is-hoverable">
+                            <thead style="position: sticky; top: 0; z-index: 1;">
+                                <tr>
+                                    <th>ニックネーム</th>
+                                    <th>点数</th>
+                                    <th>編集</th>
+                                    <th>削除</th>
+                                </tr>
                         </thead>
                         <tbody>
                             {% for player in players %}
                             <tr>
                                 <td>{{ player.nickname }}</td>
                                 <td>
-                                        <form method="post" class="is-inline">
-                                            {% csrf_token %}
-                                        <!-- Editable Score -->
+                                    <form method="post" class="is-inline">
+                                        {% csrf_token %}
                                         <div class="control">
                                             <input class="input is-small" type="number" name="score" value="{{ player.score }}" required>
                                         </div>
                                     </td>
                                     <td>
-                                        <!-- Edit Button -->
                                         <div class="control">
                                             <button class="button is-small is-info" type="submit" name="edit_player">編集</button>
                                         </div>
                                     </form>
                                 </td>
                                 <td>
-                                    <!-- Delete Button -->
                                     <form method="post" class="is-inline">
                                         {% csrf_token %}
                                         <input type="hidden" name="player_id" value="{{ player.id }}">
@@ -82,6 +81,7 @@
                 </div>
             </div>
         </div>
+    </div>
 
         <!-- Game Management -->
         <div class="column">
