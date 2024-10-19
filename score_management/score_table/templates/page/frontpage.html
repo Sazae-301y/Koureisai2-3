@@ -1,0 +1,239 @@
+{% extends "page/base.html" %}
+
+{% block content %}
+    <!-- カスタムCSSを追加 -->
+    <style>
+        a {
+            color: inherit; /* 親要素の色を継承して青色を消す */
+            text-decoration: none; /* 下線を消す */
+        }
+
+        a:hover {
+            color: #ff5722; /* ホバー時にオレンジ色に変更（例） */
+            text-decoration: underline; /* ホバー時に下線を追加 */
+        }
+        .first-place {
+            background-color: gold;
+            font-weight: bold;
+            color: black;
+        }
+
+        .second-place {
+            background-color: silver;
+            font-weight: bold;
+            color: black;
+        }
+
+        .third-place {
+            background-color: #cd7f32; /* ブロンズ */
+            font-weight: bold;
+            color: white;
+        }
+
+        .podium {
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            margin: 50px;
+            gap: 50px;
+        }
+
+        .first, .second, .third {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .first {
+            height: 250px;
+            transform: translateY(-30px);
+        }
+
+        .second {
+            height: 200px;
+            transform: translateY(-20px);
+        }
+
+        .third {
+            height: 150px;
+            transform: translateY(-10px);
+        }
+
+        /* 新しい円のデザイン - 幅と高さを固定して正円に */
+        .circle {
+            width: 150px;  /* 幅と高さを同じに設定 */
+            height: 150px;
+            border-radius: 50%;
+            background: linear-gradient(145deg, #e6e6e6, #ffffff);
+            box-shadow: 5px 5px 10px #d1d1d1, -5px -5px 10px #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+        }
+
+        .circle:hover {
+            transform: scale(1.1);
+            box-shadow: 5px 5px 15px #c1c1c1, -5px -5px 15px #ffffff;
+        }
+
+        /* ニックネームのデザイン */
+        .nickname {
+            font-size: 22px;
+            font-weight: bold;
+            font-family: 'Raleway', sans-serif;
+            color: #333;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin: 0;
+        }
+
+        /* 順位表示のスタイル */
+        .place {
+            font-size: 36px;
+            font-weight: bold;
+            color: #333;
+            margin-top: 10px;
+        }
+
+        .first .place {
+            color: #FFD700;
+        }
+
+        .second .place {
+            color: #C0C0C0;
+
+        }
+
+        .third .place {
+            color: #CD7F32;
+        }
+
+        /* メディアクエリ - 画面幅が600px以下のスマホでは表示しない */
+        @media screen and (max-width: 600px) {
+            .podium {
+                display: none;
+            }
+        }
+
+
+
+
+    </style>
+
+    <!-- 大きく「得点表」と表示 -->
+    <h1 class="title is-2 has-text-centered">得点表</h1>
+
+    <div class="podium">
+        <div class="second">
+            <div class="circle">
+                <p class="nickname">{{ second_place.nickname }}</p>
+            </div>
+            <p class="place">2位</p>
+        </div>
+        <div class="first">
+            <div class="circle">
+                <p class="nickname">{{ first_place.nickname }}</p>
+            </div>
+            <p class="place">1位</p>
+        </div>
+        <div class="third">
+            <div class="circle">
+                <p class="nickname">{{ third_place.nickname }}</p>
+            </div>
+            <p class="place">3位</p>
+        </div>
+    </div>
+
+    <!-- 表のコンテンツ -->
+    <div class="table-container" style="max-height: 450px; overflow-y: auto;">
+        <table class="table is-striped is-hoverable is-fullwidth">
+            <thead>
+                <tr>
+                    <th>順位</th>
+                    <th>ニックネーム</th>
+                    <th>得点</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for participant in participants %}
+                <tr class="
+                {% if forloop.counter == 1 %}
+                    first-place
+                {% elif forloop.counter == 2 %}
+                    second-place
+                {% elif forloop.counter == 3 %}
+                    third-place
+                {% endif %}
+            ">
+                    <td>
+                        {% if forloop.counter == 1 %}
+                            🏆 1位
+                        {% elif forloop.counter == 2 %}
+                            🥈 2位
+                        {% elif forloop.counter == 3 %}
+                            🥉 3位
+                        {% else %}
+                            {{ forloop.counter }}位
+                        {% endif %}
+                    </td>
+                    <td>{{ participant.nickname }}</td>
+                    <td>{{ participant.score }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class="has-text-centered mt-5">
+        <a href="{% url 'score_table' %}" class="button is-link is-light is-medium">
+            もっとみる
+        </a>
+    </div>
+    <hr>
+
+    <!-- コメント表示セクション -->
+    <h2 class="title is-4">投稿されたコメント</h2>
+    <div class="box">
+
+        <div style="max-height: 450px; overflow-y: auto;">
+            {% for post in posts %}
+            <article class="media">
+                <figure class="media-left">
+                    <p class="image is-64x64">
+                        <img src="https://kotonohaworks.com/free-icons/wp-content/uploads/kkrn_icon_user_1.png">
+                    </p>
+                </figure>
+                <div class="media-content">
+                    <div class="content">
+                        <a href="{% url 'post_detail' post.slug %}">
+                            <p>
+                                <small>{{ post.posted_date }}</small>
+                                <br>
+                                {{ post.comment }}
+                            </p>
+                        </a>
+                    </div>
+                </div>
+            </article>
+            <hr>
+            {% endfor %}
+        </div>
+        
+        <div class="box">
+            <form method="POST">
+                {% csrf_token %}
+                <div>
+                    <label for="{{ form.comment.id_for_label }}">コメント</label>
+                    {{ form.comment }}
+                </div>
+                <div class="field is-grouped is-grouped-right">
+                    <div class="control">
+                        <button class="button is-link" type="submit">送信</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+{%endblock%}
