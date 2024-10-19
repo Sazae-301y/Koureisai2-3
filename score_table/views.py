@@ -43,7 +43,7 @@ def index(request):
     return render(request, 'page/Fujita_template.html')
 
 def get_ranking_data(request):
-    rankings = FujitaRanking.objects.all().values('name', 'score','date')  # 'name'と'score'はモデルのフィールド名に置き換えてください
+    rankings = FujitaRanking.objects.all().values('name', 'score','date').order_by('-score')  # 'name'と'score'はモデルのフィールド名に置き換えてください
     return JsonResponse(list(rankings), safe=False)
 
 def post_detail(request,slug):
