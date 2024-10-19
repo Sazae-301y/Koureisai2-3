@@ -47,4 +47,8 @@ async function displayRanking() {
 displayRanking();
 
 
+setTimeout(function(){
+    window.location.reload();
+}, 180000); 
+
 
