@@ -207,7 +207,7 @@ def reservation_management(request):
 
     # GETリクエスト時に表示するデータ
     reserved_reservations = Reservation.objects.filter(is_checked_in=False).order_by('created_at')
-    checked_in_reservations = Reservation.objects.filter(is_checked_in=True).order_by('created_at')
+    checked_in_reservations = Reservation.objects.filter(is_checked_in=True).order_by('-created_at')
     now = timezone.now()
     ramdom_number = generate_reservation_number()
     
