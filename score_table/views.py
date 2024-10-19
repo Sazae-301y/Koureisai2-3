@@ -9,18 +9,19 @@ from django.utils import timezone
 import json
 from django.contrib.admin.views.decorators import staff_member_required
 from django.http import HttpResponse
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta,time
 
 
 # 現在の日付と30日前の日付を取得する例
-end_date = datetime.now()
-start_date = end_date - timedelta(days=2)
+today = datetime.now().date()
+start_time = datetime.combine(today, time(0, 0, 0))
+end_time = datetime.combine(today, time(12, 0, 0))
 
 # Create your views here.
 
 def frontpage(request):
     posts = Post.objects.all().order_by('-posted_date')
-    participants = Participant.objects.filter(posted_date__range=(start_date, end_date)).order_by('-score')
+    participants = Participant.objects.filter(posted_date__range=(start_time, end_time)).order_by('-score')
     first_place = participants[0] if len(participants) > 0 else None
     second_place = participants[1] if len(participants) > 1 else None
     third_place = participants[2] if len(participants) > 2 else None
@@ -52,7 +53,7 @@ def index(request):
     return render(request, 'page/Fujita_template.html')
 
 def get_ranking_data(request):
-    rankings = FujitaRanking.objects.filter(date__range=(start_date, end_date)).values('name', 'score','date').order_by('-score')  # 'name'と'score'はモデルのフィールド名に置き換えてください
+    rankings = FujitaRanking.objects.filter(date__range=(start_time, end_time)).values('name', 'score','date').order_by('-score')  # 'name'と'score'はモデルのフィールド名に置き換えてください
     return JsonResponse(list(rankings), safe=False)
 
 def post_detail(request,slug):
