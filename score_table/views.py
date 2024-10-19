@@ -14,7 +14,7 @@ from datetime import datetime, timedelta
 
 # 現在の日付と30日前の日付を取得する例
 end_date = datetime.now()
-start_date = end_date - timedelta(days=1)
+start_date = end_date - timedelta(days=2)
 
 # Create your views here.
 
