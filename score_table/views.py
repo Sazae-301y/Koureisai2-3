@@ -198,6 +198,9 @@ def reservation_management(request):
             if action == 'reservate':
                 reservation = Reservation(nickname=nickname, reservation_number=reservation_number)
                 reservation.save()
+            elif action == 'reservate_accept':
+                reservation = Reservation(nickname=nickname, reservation_number=reservation_number, is_checked_in=True)
+                reservation.save()
 
         # 処理が終わったらリダイレクト（PRGパターン）
         return redirect('reservation_management')
