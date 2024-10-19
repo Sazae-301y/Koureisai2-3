@@ -4,14 +4,23 @@ from django.shortcuts import get_object_or_404,render,redirect
 from .forms import PostForm
 from django.http import JsonResponse
 from .models import Post,Participant,FujitaRanking,Reservation
+from django.views.decorators.csrf import csrf_exempt
 from django.utils import timezone
+import json
 from django.contrib.admin.views.decorators import staff_member_required
+from django.http import HttpResponse
+from datetime import datetime, timedelta
+
+
+# 現在の日付と30日前の日付を取得する例
+end_date = datetime.now()
+start_date = end_date - timedelta(days=1)
 
 # Create your views here.
 
 def frontpage(request):
     posts = Post.objects.all().order_by('-posted_date')
-    participants = Participant.objects.all().order_by('-score')
+    participants = Participant.objects.filter(posted_date__range=(start_date, end_date)).order_by('-score')
     first_place = participants[0] if len(participants) > 0 else None
     second_place = participants[1] if len(participants) > 1 else None
     third_place = participants[2] if len(participants) > 2 else None
@@ -43,7 +52,7 @@ def index(request):
     return render(request, 'page/Fujita_template.html')
 
 def get_ranking_data(request):
-    rankings = FujitaRanking.objects.all().values('name', 'score','date').order_by('-score')  # 'name'と'score'はモデルのフィールド名に置き換えてください
+    rankings = FujitaRanking.objects.filter(date__range=(start_date, end_date)).values('name', 'score','date').order_by('-score')  # 'name'と'score'はモデルのフィールド名に置き換えてください
     return JsonResponse(list(rankings), safe=False)
 
 def post_detail(request,slug):
@@ -217,3 +226,20 @@ def reservation_management(request):
         'now': now,
         'random_number':ramdom_number
     })
+
+@staff_member_required
+def counter(request):
+    return render(request, 'page/counter.html')
+
+
+def counter(request):
+    if request.method == 'POST':
+        remaining_time = request.POST.get('remaining_time')
+        drop_count = request.POST.get('drop_count')
+        calculated_result = request.POST.get('calculated_result')
+
+        # ここでデータベースに保存したり、他の処理を実行できます
+        # とりあえず結果を表示
+        return HttpResponse(f"残り時間: {remaining_time}, 落とした回数: {drop_count}, 計算結果: {calculated_result}")
+
+    return render(request, 'page/counter.html')
