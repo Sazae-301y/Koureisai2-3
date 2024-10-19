@@ -30,9 +30,8 @@ function format_date(isoDate) {
 
 async function displayRanking() {
     let rankingData = await fetchRankingData();
+    console.log(rankingData);
     rankingTable.innerHTML = ''; 
-
-    rankingData.sort((a, b) => b.score - a.score);
 
     rankingData.forEach((entry, i) => {
         const row = document.createElement('tr');
@@ -47,5 +46,9 @@ async function displayRanking() {
 
 displayRanking();
 
+
+setTimeout(function(){
+    window.location.reload();
+}, 60000); 
 
 

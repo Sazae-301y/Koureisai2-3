@@ -43,7 +43,7 @@ def index(request):
     return render(request, 'page/Fujita_template.html')
 
 def get_ranking_data(request):
-    rankings = FujitaRanking.objects.all().values('name', 'score','date')  # 'name'と'score'はモデルのフィールド名に置き換えてください
+    rankings = FujitaRanking.objects.all().values('name', 'score','date').order_by('-score')  # 'name'と'score'はモデルのフィールド名に置き換えてください
     return JsonResponse(list(rankings), safe=False)
 
 def post_detail(request,slug):
@@ -52,7 +52,13 @@ def post_detail(request,slug):
 
 # 予約番号をランダムに生成する関数
 def generate_reservation_number():
-    return ''.join(random.choices(string.digits, k=3))
+    while True:
+        # ランダムな6桁の英数字の予約番号を生成
+        reservation_number = ''.join(random.choices(string.digits, k=4))
+        
+        # この予約番号が既にデータベースに存在するか確認
+        if not Reservation.objects.filter(reservation_number=reservation_number).exists():
+            return reservation_number
 
 def reservation_confirmation(request):
     reservation_number = request.session.get('reservation_number', None)
@@ -70,10 +76,12 @@ def reservation_confirmation(request):
                 created_at__lt=reservation.created_at,
                 is_checked_in=False
             ).count()
+            waiting_time = ahead_of_you * 2
             
             return render(request, 'page/reservation_confirmation.html', {
                 'reservation': reservation,
-                'ahead_of_you': ahead_of_you
+                'ahead_of_you': ahead_of_you,
+                'waiting_time': waiting_time
             })
         else:
             # 予約が「受付済み」なら再予約を許可するため、セッションをクリア
@@ -99,6 +107,49 @@ def delete_reservation(request, reservation_number):
 
 def explanation(request):
     return render(request, 'page/explanation.html')
+
+
+@staff_member_required
+def custom_admin_view(request):
+    players = Participant.objects.all()
+    games = FujitaRanking.objects.all()
+
+    if request.method == "POST":
+        # Playerの操作
+        if 'add_player' in request.POST:
+            nickname = request.POST.get('nickname')
+            score = request.POST.get('score')
+            Participant.objects.create(nickname=nickname, score=score, posted_date=timezone.now())
+        elif 'edit_player' in request.POST:
+            player_id = request.POST.get('player_id')
+            player = get_object_or_404(Participant, id=player_id)
+            player.nickname = request.POST.get('nickname')
+            player.score = request.POST.get('score')
+            player.save()
+        elif 'delete_player' in request.POST:
+            player_id = request.POST.get('player_id')
+            player = get_object_or_404(Participant, id=player_id)
+            player.delete()
+
+        # Gameの操作
+        if 'add_game' in request.POST:
+            name = request.POST.get('name')
+            score = request.POST.get('score')
+            FujitaRanking.objects.create(name=name, score=score, date=timezone.now())
+        elif 'edit_game' in request.POST:
+            game_id = request.POST.get('game_id')
+            game = get_object_or_404(FujitaRanking, id=game_id)
+            game.name = request.POST.get('name')
+            game.score = request.POST.get('score')
+            game.save()
+        elif 'delete_game' in request.POST:
+            game_id = request.POST.get('game_id')
+            game = get_object_or_404(FujitaRanking, id=game_id)
+            game.delete()
+
+        return redirect('custom_admin')
+
+    return render(request, 'page/custom_admin.html', {'players': players, 'games': games})
 
 
 
@@ -142,10 +193,13 @@ def reservation_management(request):
                     pass
         elif 'manual_reservation' in request.POST:
             nickname = request.POST.get('nickname')
+            reservation_number = request.POST.get('reservation_number')
             action = request.POST.get('manual_reservation')
             if action == 'reservate':
-                reservation_number = generate_reservation_number()
                 reservation = Reservation(nickname=nickname, reservation_number=reservation_number)
+                reservation.save()
+            elif action == 'reservate_accept':
+                reservation = Reservation(nickname=nickname, reservation_number=reservation_number, is_checked_in=True)
                 reservation.save()
 
         # 処理が終わったらリダイレクト（PRGパターン）
@@ -153,11 +207,13 @@ def reservation_management(request):
 
     # GETリクエスト時に表示するデータ
     reserved_reservations = Reservation.objects.filter(is_checked_in=False).order_by('created_at')
-    checked_in_reservations = Reservation.objects.filter(is_checked_in=True).order_by('created_at')
+    checked_in_reservations = Reservation.objects.filter(is_checked_in=True).order_by('-created_at')
     now = timezone.now()
+    ramdom_number = generate_reservation_number()
     
     return render(request, 'page/reservation_management.html', {
         'reserved_reservations': reserved_reservations,
         'checked_in_reservations': checked_in_reservations,
-        'now': now
+        'now': now,
+        'random_number':ramdom_number
     })

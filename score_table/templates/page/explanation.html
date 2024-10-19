@@ -1,6 +1,7 @@
 {% extends "page/base.html" %}
 
 {% block content %}
+{% load static %}
 <style>
     .video-container {
         position: relative;
@@ -21,22 +22,141 @@
 
 <section class="section">
     <div class="container">
-        <div class="columns">
-            <div class="column">
-                <div class="box">
-                    <h1 class="title">全体の流れ</h1>
-                    <div class="video-container">
-                        <iframe width="2026" height="949" src="https://www.youtube.com/embed/Tu6pWncYy4U" title="世界一わかりやすいCSS講座！ #初心者向け #HTML #プログラミング入門" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-                    </div>
-                </div>
+        <div class="container">
+            <h1 class="title">ミリオンスプーン ルールブック</h1>
+
+            <!-- コース -->
+            <div class="box">
+                <h2 class="subtitle">コース</h2>
+                <ul>
+                    <li>簡単コース</li>
+                    <li>難しいコース</li>
+                </ul>
             </div>
-            <div class="column">
-                <div class="box">
-                    <h1 class="title">コの字</h1>
-                    <div class="video-container">
-                        <iframe width="2026" height="949" src="https://www.youtube.com/embed/Tu6pWncYy4U" title="世界一わかりやすいCSS講座！ #初心者向け #HTML #プログラミング入門" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-                    </div>
-                </div>
+
+            <!-- 得点のつけ方 -->
+            <div class="box">
+                <h2 class="subtitle">得点のつけ方</h2>
+                <h3>簡単コース</h3>
+                <p>制限時間: 3 分<br>
+                持ち点: 100 点<br>
+                落とすと -2 点<br>
+                残り時間を 1 秒 ＝ 1 点として加算</p>
+                <p>例: 90 点 (-2 点 × 5 回) + 80 点 (残り 80 秒) = 170 点</p>
+                <p>※ゴールした人には景品あり</p>
+
+                <h3>難しいコース</h3>
+                <p>制限時間: 4 分<br>
+                持ち点: 100 点<br>
+                落とすと -2 点<br>
+                残り時間を 1 秒 ＝ 1 点として加算</p>
+                <p>例: 90 点 (-2 点 × 5 回) + 80 点 (残り 80 秒) = 170 点</p>
+                <p>※ゴールしなくても景品あり</p>
+            </div>
+
+            <!-- 景品 -->
+            <div class="box">
+                <h2 class="subtitle">景品</h2>
+                <h3>簡単コース</h3>
+                <table class="table is-bordered is-fullwidth">
+                    <thead>
+                        <tr>
+                            <th>得点</th>
+                            <th>景品</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1～50</td>
+                            <td>飴 1 個</td>
+                        </tr>
+                        <tr>
+                            <td>50～100</td>
+                            <td>好きな景品 2 個</td>
+                        </tr>
+                        <tr>
+                            <td>100～150</td>
+                            <td>好きな景品 1 個</td>
+                        </tr>
+                        <tr>
+                            <td>150～200</td>
+                            <td>好きな景品 2 個</td>
+                        </tr>
+                        <tr>
+                            <td>200～225</td>
+                            <td>好きな景品 3 個</td>
+                        </tr>
+                        <tr>
+                            <td>225～250</td>
+                            <td>好きな景品 4 個</td>
+                        </tr>
+                        <tr>
+                            <td>250～</td>
+                            <td>好きな景品 5 個</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>難しいコース</h3>
+                <table class="table is-bordered is-fullwidth">
+                    <thead>
+                        <tr>
+                            <th>得点</th>
+                            <th>景品</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>参加賞</td>
+                            <td>飴 1 個</td>
+                        </tr>
+                        <tr>
+                            <td>1～50</td>
+                            <td>飴 2 個</td>
+                        </tr>
+                        <tr>
+                            <td>50～100</td>
+                            <td>好きな景品 1 個</td>
+                        </tr>
+                        <tr>
+                            <td>100～150</td>
+                            <td>好きな景品 2 個</td>
+                        </tr>
+                        <tr>
+                            <td>150～200</td>
+                            <td>好きな景品 3 個</td>
+                        </tr>
+                        <tr>
+                            <td>200～225</td>
+                            <td>好きな景品 4 個</td>
+                        </tr>
+                        <tr>
+                            <td>225～250</td>
+                            <td>好きな景品 5 個</td>
+                        </tr>
+                        <tr>
+                            <td>250～</td>
+                            <td>好きな景品 6 個</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- ランキング -->
+            <div class="box">
+                <h2 class="subtitle">ランキング</h2>
+                <p>コース別にランキングがあり、専用ホームページで確認可能。</p>
+                <p>午前中の上位者には、豪華なお菓子が贈呈されます（両日とも）。</p>
+            </div>
+
+            <!-- 注意事項 -->
+            <div class="box">
+                <h2 class="subtitle">注意事項</h2>
+                <ul>
+                    <li>手でボールを持たないこと</li>
+                    <li>フライングをしないこと</li>
+                    <li>鉄球が不規則に飛んだり、跳ねたりするのでケガに気を付けること</li>
+                </ul>
             </div>
         </div>
         <div class="columns">
@@ -44,15 +164,33 @@
                 <div class="box">
                     <h1 class="title">滑り台</h1>
                     <div class="video-container">
-                        <iframe width="2026" height="949" src="https://www.youtube.com/embed/Tu6pWncYy4U" title="世界一わかりやすいCSS講座！ #初心者向け #HTML #プログラミング入門" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                        <iframe width="2026" height="949" src="https://www.youtube.com/embed/rh3OKPM9Eh8" title="滑り台解説動画" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
                     </div>
                 </div>
             </div>
             <div class="column">
                 <div class="box">
-                    <h1 class="title">あああああ</h1>
+                    <h1 class="title">回転コの字</h1>
                     <div class="video-container">
-                        <iframe width="2026" height="949" src="https://www.youtube.com/embed/Tu6pWncYy4U" title="世界一わかりやすいCSS講座！ #初心者向け #HTML #プログラミング入門" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                        <iframe width="575" height="1022" src="https://www.youtube.com/embed/q_fxkmuh-pE" title="回転この字解説動画" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="columns">
+            <div class="column">
+                <div class="box">
+                    <h1 class="title">ボール転がしゲーム</h1>
+                    <div class="video-container">
+                        <iframe width="2026" height="949" src="https://www.youtube.com/embed/3pgTKae8EYg" title="ボール転がし解説動画" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                    </div>
+                </div>
+            </div>
+            <div class="column">
+                <div class="box">
+                    <h1 class="title">輪っか通しゲーム</h1>
+                    <div class="video-container">
+                        <iframe width="2026" height="949" src="https://www.youtube.com/embed/8s0-V7jEkh4" title="わっか通し解説動画" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
                     </div>
                 </div>
             </div>
