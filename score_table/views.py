@@ -15,7 +15,7 @@ from datetime import datetime, timedelta,time
 # 現在の日付と30日前の日付を取得する例
 today = datetime.now().date()
 start_time = datetime.combine(today, time(0, 0, 0))
-end_time = datetime.combine(today, time(12, 0, 0))
+end_time = datetime.combine(today, time(0, 0, 0)) + timedelta(days=1)
 
 # Create your views here.
 
